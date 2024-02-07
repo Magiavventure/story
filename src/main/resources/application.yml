@@ -1,0 +1,27 @@
+magiavventure:
+  lib:
+    common:
+      errors:
+        service-errors-messages:
+          story-not-found:
+            code: story-not-found
+            message: |-
+              La storia con id %s non è stata trovata
+            status: 404
+    jwt:
+      endpoints:
+        - path: /v1/saveStory
+          authenticated: true
+          roles: user,admin
+        - path: /v1/updateStory
+          authenticated: true
+          roles: user,admin
+        - path: /v1/deleteStory/**
+          authenticated: true
+          roles: user,admin
+        - path: /v1/retrieveStory/**
+          authenticated: true
+          roles: user,admin
+        - path: /v1/retrieveStories
+          authenticated: true
+          roles: user,admin
