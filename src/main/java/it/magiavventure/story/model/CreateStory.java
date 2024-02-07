@@ -19,8 +19,6 @@ public class CreateStory {
     private String subtitle;
     @NotNull
     private String text;
-    @NotNull
-    private String author;
     @NotEmpty
     private List<Category> categories;
 }

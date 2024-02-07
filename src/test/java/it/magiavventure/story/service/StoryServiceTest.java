@@ -1,8 +1,10 @@
 package it.magiavventure.story.service;
 
 import it.magiavventure.common.error.MagiavventureException;
+import it.magiavventure.jwt.config.AppContext;
 import it.magiavventure.jwt.service.OwnershipService;
 import it.magiavventure.mongo.entity.EStory;
+import it.magiavventure.mongo.entity.EUser;
 import it.magiavventure.mongo.model.Story;
 import it.magiavventure.mongo.repository.StoryRepository;
 import it.magiavventure.story.mapper.StoryMapper;
@@ -36,6 +38,8 @@ class StoryServiceTest {
     private StoryRepository storyRepository;
     @Mock
     private OwnershipService ownershipService;
+    @Mock
+    private AppContext appContext;
     @Captor
     private ArgumentCaptor<EStory> eStoryArgumentCaptor;
     @Captor
@@ -49,7 +53,6 @@ class StoryServiceTest {
                 .title("title")
                 .subtitle("subtitle")
                 .text("text")
-                .author("author")
                 .categories(List.of(Category
                         .builder()
                         .id(UUID.randomUUID())
@@ -72,11 +75,14 @@ class StoryServiceTest {
                         .build()))
                 .build();
 
+        Mockito.when(appContext.getUser())
+                .thenReturn(EUser.builder().name("name").build());
         Mockito.when(storyRepository.save(eStoryArgumentCaptor.capture()))
                 .thenReturn(eStory);
 
         Story story = storyService.createStory(createStory);
 
+        Mockito.verify(appContext).getUser();
         Mockito.verify(storyRepository).save(eStoryArgumentCaptor.capture());
 
 
@@ -86,7 +92,7 @@ class StoryServiceTest {
         Assertions.assertEquals(createStory.getTitle(), storyCapt.getTitle());
         Assertions.assertEquals(createStory.getSubtitle(), storyCapt.getSubtitle());
         Assertions.assertEquals(createStory.getText(), storyCapt.getText());
-        Assertions.assertEquals(createStory.getAuthor(), storyCapt.getAuthor());
+        Assertions.assertEquals("name", storyCapt.getAuthor());
         Assertions.assertIterableEquals(createStory.getCategories(), storyCapt.getCategories());
         Assertions.assertFalse(storyCapt.isActive());
         Assertions.assertFalse(storyCapt.isVerified());

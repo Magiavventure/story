@@ -32,7 +32,6 @@ class StoryOperationTest {
                 .title("title")
                 .subtitle("subtitle")
                 .text("text")
-                .author("author")
                 .categories(List.of(Category
                         .builder()
                                 .id(UUID.randomUUID())
