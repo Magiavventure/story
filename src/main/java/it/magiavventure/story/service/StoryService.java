@@ -1,7 +1,9 @@
 package it.magiavventure.story.service;
 
+import it.magiavventure.jwt.config.AppContext;
 import it.magiavventure.jwt.service.OwnershipService;
 import it.magiavventure.mongo.entity.EStory;
+import it.magiavventure.mongo.entity.EUser;
 import it.magiavventure.mongo.model.Story;
 import it.magiavventure.mongo.repository.StoryRepository;
 import it.magiavventure.story.error.StoryException;
@@ -32,16 +34,18 @@ public class StoryService {
     private final StoryRepository storyRepository;
     private final StoryMapper storyMapper;
     private final OwnershipService ownershipService;
+    private final AppContext appContext;
 
     @CacheEvict(value = {"stories"}, key = "'all'")
     public Story createStory(CreateStory createStory) {
+        EUser user = appContext.getUser();
         EStory storyToSave = EStory
                 .builder()
                 .id(UUID.randomUUID())
                 .title(createStory.getTitle())
                 .subtitle(createStory.getSubtitle())
                 .text(createStory.getText())
-                .author(createStory.getAuthor())
+                .author(user.getName())
                 .categories(createStory.getCategories())
                 .active(false)
                 .verified(false)

@@ -1,9 +1,9 @@
-# Magiavventure - Category
-[![codecov](https://codecov.io/gh/Magiavventure/category/graph/badge.svg?token=VI7YRGTGXZ)](https://codecov.io/gh/Magiavventure/category)
-![Docker Image Version (latest semver)](https://img.shields.io/docker/v/magiavventure/category)
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Magiavventure/category/build.yml)
+# Magiavventure - Story
+[![codecov](https://codecov.io/gh/Magiavventure/story/graph/badge.svg?token=EJ31IAO95X)](https://codecov.io/gh/Magiavventure/story)
+![Docker Image Version (latest semver)](https://img.shields.io/docker/v/magiavventure/story)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Magiavventure/story/build.yml)
 
-This service allows to create/update and find the categories used by Magiavventure App.
+This service allows to create/update/delete and find the stories used by Magiavventure App.
 
 ## Configuration
 The properties exposed to configure this project are:
@@ -22,20 +22,24 @@ This branch setting a specific error message to **it.magiavventure.story.error.S
 
 
 ## API
-### Create Category
-This request allow to create a new category
+### Create Story
+This request allow to create a new story
 
-`POST /v1/saveCategory`
+`POST /v1/saveStory`
 
 ```bash
 curl -X 'POST' \
-  '<hostname>:<port>/v1/saveCategory' \
+  '<hostname>:<port>/v1/saveStory' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "name": "<name>",
-  "background": "<background>",
-  "active": <active>
+    "title": "title",
+    "subtitle": "subtitle",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "author": "author",
+    "categories": [
+        {"id":"7605b172-ab5f-4af7-b12b-e668081f2cbf", "name":"category", "background":"background"}
+    ]
 }'
 ```
 `Response`
@@ -49,23 +53,19 @@ keep-alive: timeout=60
 transfer-encoding: chunked 
 
 {
-  "id": "<id>",
-  "name": "<name>",
-  "background": "<background>"
+    "title": "title",
+    "subtitle": "subtitle",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "categories": [
+        {"id":"7605b172-ab5f-4af7-b12b-e668081f2cbf", "name":"category", "background":"background"}
+    ]
 }
 ```
 
-`Errors`
-
-List of code errors that the api can return
-
-```properties
-category-exists     #(403 - in case there is already a category with the same name)
-```
 ### Update Category
-This request allow to update a category
+This request allow to update a story
 
-`PUT /v1/updateCategory`
+`PUT /v1/updateStory`
 
 ```bash
 curl -X 'PUT' \
@@ -73,10 +73,13 @@ curl -X 'PUT' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json' \
   -d '{
-  "id": "<id>",
-  "name": "<name>",
-  "background": "<background>",
-  "active": <active>
+    "id": "7605b172-ab5f-4af7-b12b-e668081f2cbf",
+    "title": "title",
+    "subtitle": "subtitle",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "categories": [
+        {"id":"7605b172-ab5f-4af7-b12b-e668081f2cbf", "name":"category", "background":"background"}
+    ]
 }'
 ```
 `Response`
@@ -101,18 +104,17 @@ transfer-encoding: chunked
 List of code errors that the api can return
 
 ```properties
-category-exists     #(403 - in case there is already a category with the same name)
-category-not-found  #(404 - in case a category not found with the id in body request)
+story-not-found  #(404 - in case a story is not found with the id in body request)
 ```
 
-### Find All Categories
-This request allow to find all categories
+### Find All Stories
+This request allow to find all stories
 
-`GET /v1/retrieveCategories`
+`GET /v1/retrieveStories`
 
 ```bash
 curl -X 'GET' \
-  '<hostname>:<port>/v1/retrieveCategories' \
+  '<hostname>:<port>/v1/retrieveStories' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json'
 ```
@@ -128,21 +130,25 @@ transfer-encoding: chunked
 
 [
   {
-    "id": "<id>",
-    "name": "<name>",
-    "background": "<background>"
+    "id": "7605b172-ab5f-4af7-b12b-e668081f2cbf",
+    "title": "title",
+    "subtitle": "subtitle",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "categories": [
+        {"id":"7605b172-ab5f-4af7-b12b-e668081f2cbf", "name":"category", "background":"background"}
+    ]
   }
 ]
 ```
 
-### Find Category by ID
-This request allow to find a category by ID
+### Find Story by ID
+This request allow to find a story by ID
 
-`PUT /v1/retrieveCategory/{id}`
+`PUT /v1/retrieveStory/{id}`
 
 ```bash
 curl -X 'GET' \
-  '<hostname>:<port>/v1/retrieveCategory/{id}' \
+  '<hostname>:<port>/v1/retrieveStory/{id}' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json'
 ```
@@ -157,9 +163,13 @@ keep-alive: timeout=60
 transfer-encoding: chunked 
 
 {
-  "id": "<id>",
-  "name": "<name>",
-  "background": "<background>"
+    "id": "7605b172-ab5f-4af7-b12b-e668081f2cbf",
+    "title": "title",
+    "subtitle": "subtitle",
+    "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "categories": [
+        {"id":"7605b172-ab5f-4af7-b12b-e668081f2cbf", "name":"category", "background":"background"}
+    ]
 }
 ```
 
@@ -168,17 +178,17 @@ transfer-encoding: chunked
 List of code errors that the api can return
 
 ```properties
-category-not-found  #(404 - in case a category not found)
+story-not-found  #(404 - in case a story is not found)
 ```
 
-### Delete Category by ID
-This request allow to delete a category by ID
+### Delete Story by ID
+This request allow to delete a story by ID
 
-`DELETE /v1/deleteCategory/{id}`
+`DELETE /v1/deleteStory/{id}`
 
 ```bash
 curl -X 'DELETE' \
-  '<hostname>:<port>/v1/deleteCategory/{id}' \
+  '<hostname>:<port>/v1/deleteStory/{id}' \
   -H 'accept: */*' \
   -H 'Content-Type: application/json'
 ```
@@ -198,7 +208,7 @@ transfer-encoding: chunked
 List of code errors that the api can return
 
 ```properties
-category-not-found  #(404 - in case a category not found)
+story-not-found  #(404 - in case a story is not found)
 ```
 
 ## Running local
